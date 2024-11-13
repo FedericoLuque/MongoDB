@@ -10,8 +10,12 @@ cluster= os.getenv("CLUSTER_MONGODB")
 
 client = MongoClient('mongodb+srv://'+usuario+':'+password+'@'+cluster+'.xw6rg.mongodb.net/?retryWrites=true&w=majority&appName='+cluster)
 
-try:
-    client.admin.command('ping')
-    print("Conectado a la base de datos correctamente")
-except Exception as e:
-    print(e)
+baseDatos = client["FedericoLuque"]
+
+coleccion = baseDatos["mi_primera_coleccion"]
+
+documento = {'nombre' : 'Federico','apellido' : 'Luque Santos'}
+
+insercion = coleccion.insert_one(documento)
+
+print(insercion)
