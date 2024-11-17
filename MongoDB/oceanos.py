@@ -77,11 +77,20 @@ print("\nDocumentos insertados con IDs:", resultado.inserted_ids)
 
 #3 - Actualizar un registro de una Colección  (0.5 puntos)
 print("\n- Apartado 3:")
-# Criterio para seleccionar el documento a actualizar
-filtro = {"nombre": "Pacífico"}
+
+# Solicitar al usuario el filtro de búsqueda
+print("Introduce el campo y valor para el filtro de búsqueda (por ejemplo, nombre: Pacífico):")
+campo_filtro = input("Campo de filtro: ")
+valor_filtro = input("Valor de filtro: ")
+
+filtro = {campo_filtro: valor_filtro}
 
 # Cambios a realizar
-actualizacion = {"$set": {"nivel_contaminacion": "alta", "descripcion": "Zona en estado crítico"}}
+print("Introduce los campos y valores para la actualización (por ejemplo, nivel_contaminacion: alta):")
+campo_actualizacion = input("Campo de actualización: ")
+valor_actualizacion = input("Valor de actualización: ")
+
+actualizacion = {"$set": {campo_actualizacion: valor_actualizacion}}
 
 # Actualizar un documento
 resultado = coleccion.update_one(filtro, actualizacion)
@@ -91,13 +100,24 @@ print(f"\nDocumentos modificados: {resultado.modified_count}")
 
 #4 - Actualizar varios registros en una Colección  (0.5 puntos)
 print("\n- Apartado 4:")
-# Criterio para seleccionar los documentos a actualizar
-filtro = {"area": 90}
 
-# Cambios que se van a realizar
-actualizacion = {"$set": {"area": 85}}
+# Solicitar al usuario el filtro de búsqueda
+print("Introduce el campo y valor para el filtro de búsqueda (por ejemplo, area: 90):")
+campo_filtro = input("Campo de filtro: ")
+valor_filtro = input("Valor de filtro: ")
 
-# Actualizar múltiples documentos
+# Crear el filtro dinámico
+filtro = {campo_filtro: eval(valor_filtro)}
+
+# Solicitar al usuario los campos a actualizar y sus nuevos valores
+print("Introduce los campos y valores para la actualización (por ejemplo, area: 85):")
+campo_actualizacion = input("Campo de actualización: ")
+valor_actualizacion = input("Valor de actualización: ")
+
+# Crear el documento de actualización
+actualizacion = {"$set": {campo_actualizacion: eval(valor_actualizacion)}}
+
+# Realizar la actualización
 resultado = coleccion.update_many(filtro, actualizacion)
 
 # Mostrar el resultado
@@ -106,24 +126,39 @@ print(f"\nDocumentos modificados: {resultado.modified_count}")
 
 #5 - Obtener varios registros por un filtro de un atributo dentro de una Colección  (0.5 puntos)
 print("\n- Apartado 5:")
-# Definir el filtro
-filtro = {"nivel_contaminacion": "alta"}
+
+# Solicitar al usuario el filtro de búsqueda
+print("Introduce el campo y valor para el filtro de búsqueda (por ejemplo, nivel_contaminacion: alta):")
+campo_filtro = input("Campo de filtro: ")
+valor_filtro = input("Valor de filtro: ")
+
+# Crear el filtro dinámico
+filtro = {campo_filtro: valor_filtro}
 
 # Obtener los documentos que coinciden con el filtro
 documentos = coleccion.find(filtro)
 
 # Mostrar los documentos obtenidos
-print("\nDocumentos encontrados con nivel de contaminacion alta:")
+print(f"\nDocumentos encontrados con {campo_filtro} = {valor_filtro}:")
 for documento in documentos:
     print(f"\n{documento}")
 
 #6 - Obtener varios registros por un filtro por varios atributos dentro de una Colección  (0.5 puntos)
 print("\n- Apartado 6:")
-# Definir los filtros
+
+# Solicitar al usuario los valores para el filtro $or
+print("Introduce los campos y valores para el filtro $or:")
+campo_filtro1 = input("Campo de filtro 1 (por ejemplo, nivel_contaminacion): ")
+valor_filtro1 = input("Valor de filtro 1 (por ejemplo, alta): ")
+
+campo_filtro2 = input("Campo de filtro 2 (por ejemplo, tipo_contaminacion): ")
+valor_filtro2 = input("Valor de filtro 2 (por ejemplo, basura marina): ")
+
+# Crear el filtro dinámico con $or
 filtro = {
     "$or": [
-        {"nivel_contaminacion": "alta"},
-        {"tipo_contaminacion": "basura marina"}
+        {campo_filtro1: valor_filtro1},
+        {campo_filtro2: valor_filtro2}
     ]
 }
 
@@ -131,33 +166,41 @@ filtro = {
 documentos = coleccion.find(filtro)
 
 # Mostrar los documentos obtenidos
-print("\nDocumentos encontrados con nivel de contaminacion alta o por basura marina:")
+print(f"\nDocumentos encontrados con {campo_filtro1} = {valor_filtro1} o {campo_filtro2} = {valor_filtro2}:")
 for documento in documentos:
     print(f"\n{documento}")
 
 #7 - Obtener todos los registros que no tengan valores nulos en un atributo dentro de una Colección (Debe existir atributos con valor a nulo)  (0.5 puntos)
 print("\n- Apartado 7:")
-# Filtro para obtener documentos donde 'nivel_contaminacion' no sea nulo
-filtro = {"nivel_contaminacion": {"$ne": None}}
 
-# Obtener los documentos que cumplen el filtro
+# Solicitar al usuario el campo y el valor para el filtro
+campo_filtro = input("Introduce el campo para el filtro (por ejemplo, nivel_contaminacion): ")
+
+# Crear el filtro dinámico
+filtro = {campo_filtro: {"$ne": None}}
+
+# Obtener los documentos que cumplen con el filtro
 documentos = coleccion.find(filtro)
 
 # Mostrar los documentos encontrados
-print("\nDocumentos encontrados (sin valores nulos en niveles de contaminacion):")
+print(f"\nDocumentos encontrados donde {campo_filtro} no es igual a nulo")
 for documento in documentos:
     print(f"\n{documento}")
 
 #8 - Obtener todos los registros que no tengan un atributo en concreto dentro de una Colección (Debe existir registros que tengan no tengan ese atributo)  (0.5 puntos)
 print("\n- Apartado 8:")
-# Filtro para documentos que no tienen el atributo 'descripcion'
-filtro = {"descripcion": {"$exists": False}}
 
-# Obtener documentos que cumplen con el filtro
+# Solicitar al usuario el campo para el filtro
+campo_filtro = input("Introduce el campo para el filtro (por ejemplo, descripcion): ")
+
+# Crear el filtro dinámico con $exists
+filtro = {campo_filtro: {"$exists": False}}
+
+# Obtener los documentos que cumplen con el filtro
 documentos = coleccion.find(filtro)
 
 # Mostrar los documentos encontrados
-print("\nDocumentos que no tienen el atributo descripcion:")
+print(f"\nDocumentos que no tienen el atributo {campo_filtro}:")
 for documento in documentos:
     print(f"\n{documento}")
 
