@@ -1,0 +1,4 @@
+ACCESS_KEY = 
+SECRET_KEY = 
+SESSION_TOKEN = 
+REGION = us-east-1
